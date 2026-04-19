@@ -294,6 +294,148 @@
             color: #aaa;
         }
 
+        /* Process Section */
+        .process-section {
+            background: var(--surface-light);
+            padding: 32px 28px;
+            border-radius: 12px;
+            margin-bottom: 48px;
+            border-top: 4px solid var(--accent);
+        }
+
+        body.dark-theme .process-section {
+            background: var(--surface-dark);
+        }
+
+        .process-section h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-light);
+        }
+
+        body.dark-theme .process-section h2 {
+            color: var(--text-dark);
+        }
+
+        .process-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body.dark-theme .process-subtitle {
+            color: #aaa;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step {
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body.dark-theme .step {
+            background: #2a2620;
+        }
+
+        .step-time {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        body.dark-theme .step-title {
+            color: var(--text-dark);
+        }
+
+        .step-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        body.dark-theme .step-content {
+            color: #aaa;
+        }
+
+        .step-content ul {
+            margin-left: 16px;
+            margin-top: 6px;
+        }
+
+        .step-content li {
+            margin-bottom: 4px;
+        }
+
+        /* Reference Links */
+        .reference-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        body.dark-theme .reference-links {
+            border-top-color: var(--border-dark);
+        }
+
+        .ref-link {
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+        }
+
+        body.dark-theme .ref-link {
+            background: #2a2620;
+        }
+
+        .ref-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .ref-link-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ref-link-desc {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -335,6 +477,93 @@
                 <p><strong>Reflection</strong> — What pattern showed up? What did I learn?</p>
                 <p><strong>Commitment</strong> — What will I be careful about today?</p>
                 <p style="margin-top: 20px; font-size: 14px;">Over time, patterns emerge. Clarity compounds. Growth happens.</p>
+            </div>
+
+            <!-- 30-Minute Process -->
+            <div class="process-section">
+                <h2>Your Daily Practice (5:30 AM)</h2>
+                <p class="process-subtitle">A structured 30-minute morning reflection ritual</p>
+
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-time">2 minutes</div>
+                        <div class="step-title">Centering</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Sit quietly</li>
+                                <li>Deep breaths</li>
+                                <li>Set intention: "What can I learn today?"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-time">5 minutes</div>
+                        <div class="step-title">Story Mining</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>What happened yesterday worth keeping?</li>
+                                <li>Scan for incidents/conversations</li>
+                                <li>Log story entry via form</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-time">5 minutes</div>
+                        <div class="step-title">Quick Pattern Scan</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Open section-tree.md</li>
+                                <li>Circle 1-2 sections that showed up</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-time">15 minutes</div>
+                        <div class="step-title">Deep Diagnosis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Log Reflection entry</li>
+                                <li>Log Commitment entry</li>
+                                <li>Use NVC framework</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-time">3 minutes</div>
+                        <div class="step-title">Closure</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Read the daily quote</li>
+                                <li>Gratitude for one insight</li>
+                                <li>Close and move forward</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-time">Total</div>
+                        <div class="step-title">30 Minutes</div>
+                        <div class="step-content">
+                            From reflection to clarity to action.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reference Links -->
+                <div class="reference-links">
+                    <a href="sections.html" class="ref-link">
+                        <div class="ref-link-title">📚 Sections & Subsections</div>
+                        <div class="ref-link-desc">Reference all 9 life areas during pattern scan</div>
+                    </a>
+                    <a href="viewer.html" class="ref-link">
+                        <div class="ref-link-title">🔍 View Past Entries</div>
+                        <div class="ref-link-desc">Review patterns and track your progress</div>
+                    </a>
+                </div>
             </div>
 
             <!-- Features -->

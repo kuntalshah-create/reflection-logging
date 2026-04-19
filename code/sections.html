@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Sections & Subsections - Reflection Logging</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #f7f4ee;
+            --bg-dark: #1a1714;
+            --surface-light: #ffffff;
+            --surface-dark: #2a2620;
+            --text-light: #1a1714;
+            --text-dark: #e8dfc8;
+            --accent: #c17b3a;
+            --accent-light: #e8d4b8;
+            --border-light: #ddd8ce;
+            --border-dark: #3a3530;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        body.dark-theme {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--surface-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.dark-theme header {
+            border-bottom-color: var(--border-dark);
+            background: var(--surface-dark);
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .theme-toggle,
+        .back-btn {
+            background: none;
+            border: 1px solid var(--border-light);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-light);
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        body.dark-theme .theme-toggle,
+        body.dark-theme .back-btn {
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        .theme-toggle:hover,
+        .back-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 28px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        body.dark-theme h1 {
+            color: var(--text-dark);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        body.dark-theme .subtitle {
+            color: #aaa;
+        }
+
+        /* Section Grid */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .section-card {
+            background: var(--surface-light);
+            border-radius: 8px;
+            padding: 24px;
+            border-left: 4px solid var(--accent);
+        }
+
+        body.dark-theme .section-card {
+            background: var(--surface-dark);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--accent);
+        }
+
+        .section-description {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        body.dark-theme .section-description {
+            color: #aaa;
+        }
+
+        .subsection-list {
+            list-style: none;
+        }
+
+        .subsection-item {
+            padding: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 8px;
+        }
+
+        body.dark-theme .subsection-item {
+            border-bottom-color: var(--border-dark);
+        }
+
+        .subsection-item:last-child {
+            border-bottom: none;
+        }
+
+        .subsection-name {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        body.dark-theme .subsection-name {
+            color: var(--text-dark);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 28px;
+            font-size: 12px;
+            color: var(--text-light);
+            opacity: 0.6;
+            border-top: 1px solid var(--border-light);
+            margin-top: 40px;
+            background: var(--surface-light);
+        }
+
+        body.dark-theme footer {
+            color: var(--text-dark);
+            border-top-color: var(--border-dark);
+            background: var(--surface-dark);
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">Sections & Subsections</div>
+        <div class="header-buttons">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+            <a href="./index.html" class="back-btn">← Home</a>
+        </div>
+    </header>
+
+    <main>
+        <h1>Your Life Sections</h1>
+        <p class="subtitle">Complete reference of all sections and subsections for your reflection practice</p>
+
+        <div class="sections-grid">
+            <!-- Self-Awareness -->
+            <div class="section-card">
+                <div class="section-title">Self-Awareness & Pattern Recognition</div>
+                <p class="section-description">How to see what's really happening in you—the prerequisite for all work</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Pattern Recognition</span></li>
+                </ul>
+            </div>
+
+            <!-- Authenticity & Ownership -->
+            <div class="section-card">
+                <div class="section-title">Authenticity & Ownership</div>
+                <p class="section-description">Show up as yourself; take complete responsibility for your life</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Being Yourself</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Confidence</span></li>
+                </ul>
+            </div>
+
+            <!-- Wisdom & Foundation -->
+            <div class="section-card">
+                <div class="section-title">Wisdom & Foundation</div>
+                <p class="section-description">Ground yourself in core beliefs; understand the long view</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Long-Term Thinking</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Vedic & Spiritual Wisdom</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Focus & Energy</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Priorities & Boundaries</span></li>
+                </ul>
+            </div>
+
+            <!-- Presence & Awareness & Confidence -->
+            <div class="section-card">
+                <div class="section-title">Presence & Awareness & Confidence</div>
+                <p class="section-description">Be fully here now; know yourself; build confidence</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Presence</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Self-Care</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Building Confidence</span></li>
+                </ul>
+            </div>
+
+            <!-- Thinking & Clarity -->
+            <div class="section-card">
+                <div class="section-title">Thinking & Clarity</div>
+                <p class="section-description">Understand deeply; avoid biases; think long-term; learn from others</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Clear Thinking</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Decision Making</span></li>
+                </ul>
+            </div>
+
+            <!-- Connection & Relationship & Family -->
+            <div class="section-card">
+                <div class="section-title">Connection & Relationship & Family</div>
+                <p class="section-description">Love deeply; listen with presence; understand needs</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">NVC: The Language & Philosophy</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Love Payal Better</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Marriage & Partnership</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Understanding Others</span></li>
+                </ul>
+            </div>
+
+            <!-- Network & Brand -->
+            <div class="section-card">
+                <div class="section-title">Network & Brand</div>
+                <p class="section-description">Build visibility and influence; create connections</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">(Develop as needed)</span></li>
+                </ul>
+            </div>
+
+            <!-- Work & Leadership -->
+            <div class="section-card">
+                <div class="section-title">Work & Leadership</div>
+                <p class="section-description">Create value through quality and leadership</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Leadership</span></li>
+                    <li class="subsection-item"><span class="subsection-name">Focus & Energy</span></li>
+                </ul>
+            </div>
+
+            <!-- Service & Impact -->
+            <div class="section-card">
+                <div class="section-title">Service & Impact</div>
+                <p class="section-description">Give generously; level up people; create lasting impact</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">Grassroots & Community</span></li>
+                </ul>
+            </div>
+
+            <!-- Uncategorized -->
+            <div class="section-card">
+                <div class="section-title">Uncategorized</div>
+                <p class="section-description">Items that don't fit primary sections (parked for later)</p>
+                <ul class="subsection-list">
+                    <li class="subsection-item"><span class="subsection-name">(Organize as needed)</span></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Use this reference during your morning review to map entries to the right section & subsection.
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeButtonText();
+        }
+
+        function updateThemeButtonText() {
+            const isDark = document.body.classList.contains('dark-theme');
+            document.querySelector('.theme-toggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+
+        function applyThemePreference() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+            updateThemeButtonText();
+        }
+
+        document.addEventListener('DOMContentLoaded', applyThemePreference);
+    </script>
+</body>
+</html>
