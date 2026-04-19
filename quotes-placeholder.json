@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "description": "Daily rotating quotes for the Reflection Logging System landing page",
+    "totalQuotes": 0,
+    "lastUpdated": "2026-04-19",
+    "instructions": "Add your quotes as objects in the 'quotes' array below. Each quote will display once per rotation cycle."
+  },
+  "quotes": [
+    {
+      "text": "Every entry matters. You're building clarity, one reflection at a time.",
+      "author": "Your Reflection Practice"
+    }
+  ],
+  "instructions": {
+    "howToAdd": "Copy the structure below and add more quotes to the 'quotes' array",
+    "template": {
+      "text": "Your quote here",
+      "author": "Author name or source"
+    },
+    "rotation": "Quotes rotate by day of year, so same quote appears all day but different quote each day",
+    "example": [
+      {
+        "text": "The only way to do great work is to love what you do.",
+        "author": "Steve Jobs"
+      },
+      {
+        "text": "Be yourself; everyone else is already taken.",
+        "author": "Oscar Wilde"
+      },
+      {
+        "text": "The mind is everything. What you think, you become.",
+        "author": "Buddha"
+      }
+    ]
+  }
+}

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Review · 5:30am</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Karla:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #111009;
+  --bg2:      #1a1810;
+  --bg3:      #221f14;
+  --amber:    #c8903a;
+  --amber-dim:#7a5520;
+  --cream:    #e8dfc8;
+  --muted:    #6b6050;
+  --faint:    #322e22;
+  --ink:      #d4c9b0;
+
+  --s1: #8a7ed4; /* be myself — soft violet */
+  --s2: #c47a7a; /* loving her — rose */
+  --s3: #5a9e82; /* story mining — sage */
+  --s4: #6a9ec4; /* nvc — steel blue */
+  --s5: #b08a50; /* low confidence — warm ochre */
+  --s6: #8a8a8a; /* other — neutral */
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Karla', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  padding: 28px 36px 20px;
+  border-bottom: 1px solid var(--faint);
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  animation: fadeIn 0.5s ease;
+}
+.header-time {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--amber);
+  letter-spacing: 0.08em;
+}
+.header-title {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--cream);
+}
+.header-date {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.done-count {
+  font-size: 12px;
+  color: var(--amber-dim);
+  background: var(--faint);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.done-count.all-done {
+  color: var(--amber);
+}
+
+/* ── LAYOUT ── */
+.shell {
+  display: flex;
+  height: calc(100vh - 73px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 24px 0;
+  border-right: 1px solid var(--faint);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.section-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: 'Karla', sans-serif;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  width: 100%;
+  position: relative;
+}
+.section-btn:hover { color: var(--cream); background: var(--faint); }
+.section-btn.active { color: var(--cream); background: var(--bg3); }
+.section-btn .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.section-btn.has-entry .dot { opacity: 1; }
+.section-btn.active .dot { opacity: 1; }
+.section-btn .check {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--amber);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.section-btn.has-entry .check { opacity: 1; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid var(--faint);
+}
+.close-btn {
+  width: 100%;
+  padding: 9px;
+  background: var(--faint);
+  border: none;
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: 'Karla', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+.close-btn:hover { color: var(--cream); background: var(--bg3); }
+.close-btn.ready { color: var(--amber); border: 1px solid var(--amber-dim); background: transparent; }
+
+/* ── MAIN PANEL ── */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px 40px;
+  animation: slideIn 0.2s ease;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.section-number {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--cream);
+}
+.section-color-bar {
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* PROMPT AREA */
+.prompt-block {
+  margin: 20px 0 24px;
+  padding: 16px 20px;
+  border-left: 1px solid var(--faint);
+  border-radius: 0 6px 6px 0;
+}
+.prompt-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.prompt-item {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+  padding: 2px 0;
+}
+.prompt-item::before { content: "· "; }
+.prompt-sub {
+  font-size: 12px;
+  color: var(--faint);
+  padding-left: 12px;
+  line-height: 1.8;
+}
+.prompt-sub::before { content: "↳ "; color: var(--faint); }
+
+/* WRITE AREA */
+.write-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+textarea {
+  width: 100%;
+  min-height: 130px;
+  background: var(--bg2);
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--cream);
+  resize: vertical;
+  transition: border-color 0.2s;
+  caret-color: var(--amber);
+}
+textarea:focus { outline: none; border-color: var(--amber-dim); }
+textarea::placeholder { color: var(--faint); font-style: italic; }
+
+.save-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.save-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--amber-dim);
+  border-radius: 6px;
+  color: var(--amber);
+  font-family: 'Karla', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.save-btn:hover { background: var(--faint); }
+.next-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--faint);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: 'Karla', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.next-btn:hover { color: var(--cream); border-color: var(--muted); }
+.saved-msg {
+  font-size: 12px;
+  color: var(--amber);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.saved-msg.show { opacity: 1; }
+
+/* PAST ENTRIES */
+.past-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--faint);
+}
+.past-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.past-entry {
+  background: var(--bg2);
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.past-entry-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.past-entry-text {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+/* DONE SCREEN */
+.done-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+.done-screen.visible { display: flex; }
+.done-glyph {
+  font-family: 'Lora', serif;
+  font-size: 48px;
+  color: var(--amber);
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+.done-title {
+  font-family: 'Lora', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.done-sub {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 320px;
+  line-height: 1.7;
+}
+.done-summary {
+  margin-top: 32px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.done-tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--faint);
+  color: var(--muted);
+}
+.done-tag.filled { border-color: var(--amber-dim); color: var(--amber); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-time" id="live-time">5:30 AM</span>
+  <span class="header-title">Morning Review</span>
+  <span class="header-date" id="header-date"></span>
+  <span class="done-count" id="done-count">0 / 6</span>
+</div>
+
+<div class="shell">
+  <nav class="sidebar">
+    <button class="section-btn active" onclick="showSection(0)" id="btn-0">
+      <span class="dot" style="background:var(--s3)"></span>
+      Story mining
+      <span class="check">✓</span>
+    </button>
+    <button class="section-btn" onclick="showSection(1)" id="btn-1">
+      <span class="dot" style="background:var(--s1)"></span>
+      Be yourself
+      <span class="check">✓</span>
+    </button>
+    <button class="section-btn" onclick="showSection(2)" id="btn-2">
+      <span class="dot" style="background:var(--s2)"></span>
+      Loving her
+      <span class="check">✓</span>
+    </button>
+    <button class="section-btn" onclick="showSection(3)" id="btn-3">
+      <span class="dot" style="background:var(--s4)"></span>
+      NVC reflection
+      <span class="check">✓</span>
+    </button>
+    <button class="section-btn" onclick="showSection(4)" id="btn-4">
+      <span class="dot" style="background:var(--s5)"></span>
+      Low confidence
+      <span class="check">✓</span>
+    </button>
+    <button class="section-btn" onclick="showSection(5)" id="btn-5">
+      <span class="dot" style="background:var(--s6)"></span>
+      Other
+      <span class="check">✓</span>
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="close-btn" id="close-btn" onclick="showDone()">
+        Mark session done
+      </button>
+    </div>
+  </nav>
+
+  <div class="main" id="main-area">
+    <!-- content injected by JS -->
+  </div>
+
+  <div class="done-screen" id="done-screen">
+    <div class="done-glyph">◎</div>
+    <div class="done-title">Session complete</div>
+    <div class="done-sub">Good work. Let yesterday become today's clarity.</div>
+    <div class="done-summary" id="done-summary"></div>
+  </div>
+</div>
+
+<script>
+// ── SECTIONS ────────────────────────────────────────────────────
+const SECTIONS = [
+  {
+    id: 'story',
+    title: 'Story Mining',
+    number: '01',
+    color: 'var(--s3)',
+    catKey: 'Story',
+    placeholder: 'What happened yesterday that is worth keeping? A moment, a conversation, a realisation...',
+    prompts: [
+      { text: 'Find one story worth keeping from yesterday' },
+      { text: 'Was there a transformation, realisation, or accumulation of events?' },
+      { text: 'What was the moment of greatest clarity?', sub: 'Build the context (98%) that makes that moment land' },
+    ]
+  },
+  {
+    id: 'beyourself',
+    title: 'Be Yourself',
+    number: '02',
+    color: 'var(--s1)',
+    catKey: 'People Pleasing',
+    placeholder: 'Where did I people-please yesterday? Where did I show up as myself?',
+    prompts: [
+      { text: 'Did I hide an opinion or avoid a hard conversation?' },
+      { text: 'Did I take complete ownership — or deflect to someone/something?' },
+      { text: 'Where did I act from fear? Where did I act from integrity?' },
+      { text: 'One moment I was authentically myself — what made that possible?' },
+    ]
+  },
+  {
+    id: 'lovingher',
+    title: 'Loving Her',
+    number: '03',
+    color: 'var(--s2)',
+    catKey: 'Payal Letter',
+    placeholder: 'How did I show up for her yesterday? What did I miss?',
+    prompts: [
+      { text: 'Did she feel heard — or did I argue, explain, or go silent?' },
+      { text: 'Was I present with her — or in my head?' },
+      { text: 'Did I hide anything from her that I should have shared?' },
+      { text: 'One small thing I did that she could feel — even if I didn\'t say it.' },
+    ]
+  },
+  {
+    id: 'nvc',
+    title: 'NVC Reflection',
+    number: '04',
+    color: 'var(--s4)',
+    catKey: 'OFNR - Self',
+    placeholder: 'Observation · Feeling · Need · Request — from yesterday...',
+    prompts: [
+      { text: 'Where did I react yesterday instead of respond?' },
+      { text: 'What was the feeling underneath the reaction?' },
+      { text: 'What need was unmet?', sub: 'Connection, respect, autonomy, security, clarity...' },
+      { text: 'What would a need-based request have looked like?' },
+    ]
+  },
+  {
+    id: 'confidence',
+    title: 'Low Confidence',
+    number: '05',
+    color: 'var(--s5)',
+    catKey: 'Low Confidence',
+    placeholder: 'Where did I doubt myself, compare, or shrink yesterday?',
+    prompts: [
+      { text: 'Did I doubt myself or compare to someone?' },
+      { text: 'Did I give away my point of view too easily?' },
+      { text: 'Was there a moment where I underestimated myself?' },
+      { text: 'What positive thought took me out of the spiral — or what could have?' },
+    ]
+  },
+  {
+    id: 'other',
+    title: 'Other',
+    number: '06',
+    color: 'var(--s6)',
+    catKey: 'Thoughts',
+    placeholder: 'Anything from yesterday that doesn\'t fit above — a thought, an observation, a question...',
+    prompts: [
+      { text: 'Any observation from the day that has a lesson in it?' },
+      { text: 'A thought that stayed with you and you haven\'t processed yet?' },
+      { text: 'Something about a person, a situation, or life that struck you?' },
+    ]
+  },
+];
+
+// ── STATE ────────────────────────────────────────────────────────
+const KEY = 'morning_review_v1';
+let activeIdx = 0;
+
+function todayStr() {
+  const d = new Date();
+  // Use yesterday's date as "yesterday" context
+  const y = new Date(d); y.setDate(d.getDate() - 1);
+  return y.toISOString().split('T')[0];
+}
+
+function loadSession() {
+  try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveSession(data) { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+function getEntries(sectionId) {
+  const all = loadSession();
+  return (all[sectionId] || []);
+}
+
+function addEntry(sectionId, text) {
+  const all = loadSession();
+  if (!all[sectionId]) all[sectionId] = [];
+  all[sectionId].unshift({ date: todayStr(), text });
+  // Keep last 90 entries per section
+  all[sectionId] = all[sectionId].slice(0, 90);
+  saveSession(all);
+}
+
+function todayHasEntry(sectionId) {
+  const entries = getEntries(sectionId);
+  if (!entries.length) return false;
+  return entries[0].date === todayStr();
+}
+
+// ── RENDER ───────────────────────────────────────────────────────
+function showSection(idx) {
+  activeIdx = idx;
+  const s = SECTIONS[idx];
+
+  // Update sidebar
+  document.querySelectorAll('.section-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+
+  // Render main
+  const entries = getEntries(s.id);
+  const todayEntry = entries.find(e => e.date === todayStr());
+
+  const promptsHtml = s.prompts.map(p =>
+    `<div class="prompt-item">${p.text}</div>` +
+    (p.sub ? `<div class="prompt-sub">${p.sub}</div>` : '')
+  ).join('');
+
+  const pastHtml = entries.length
+    ? `<div class="past-section">
+        <div class="past-label">Recent entries</div>
+        ${entries.slice(0, 5).map(e =>
+          `<div class="past-entry">
+            <div class="past-entry-date">${formatDate(e.date)}</div>
+            <div class="past-entry-text">${escHtml(e.text)}</div>
+          </div>`
+        ).join('')}
+      </div>`
+    : '';
+
+  document.getElementById('main-area').innerHTML = `
+    <div class="section-header">
+      <div class="section-color-bar" style="background:${s.color}"></div>
+      <span class="section-number">${s.number}</span>
+      <span class="section-title">${s.title}</span>
+    </div>
+
+    <div class="prompt-block" style="border-left-color:${s.color}22">
+      <div class="prompt-label">Scan yesterday for</div>
+      ${promptsHtml}
+    </div>
+
+    <div class="write-label">Your note</div>
+    <textarea id="entry-ta" placeholder="${s.placeholder}">${todayEntry ? todayEntry.text : ''}</textarea>
+    <div class="save-row">
+      <button class="save-btn" onclick="saveCurrentEntry()">Save</button>
+      ${idx < 5 ? `<button class="next-btn" onclick="saveAndNext()">Save &amp; next →</button>` : `<button class="next-btn" onclick="saveAndDone()">Save &amp; done ✓</button>`}
+      <span class="saved-msg" id="saved-msg">Saved</span>
+    </div>
+
+    ${pastHtml}
+  `;
+
+  document.getElementById('done-screen').classList.remove('visible');
+  document.getElementById('main-area').style.display = 'block';
+  document.getElementById('main-area').style.animation = 'none';
+  setTimeout(() => document.getElementById('main-area').style.animation = 'slideIn 0.2s ease', 10);
+}
+
+function saveCurrentEntry() {
+  const ta = document.getElementById('entry-ta');
+  const text = ta.value.trim();
+  if (!text) return;
+
+  // Remove existing today entry and re-add
+  const all = loadSession();
+  const s = SECTIONS[activeIdx];
+  if (!all[s.id]) all[s.id] = [];
+  // Remove today's if exists
+  const filtered = all[s.id].filter(e => e.date !== todayStr());
+  all[s.id] = [{ date: todayStr(), text }, ...filtered].slice(0, 90);
+  saveSession(all);
+
+  updateSidebar();
+  const msg = document.getElementById('saved-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 1500);
+}
+
+function saveAndNext() {
+  saveCurrentEntry();
+  setTimeout(() => showSection(Math.min(activeIdx + 1, 5)), 200);
+}
+
+function saveAndDone() {
+  saveCurrentEntry();
+  setTimeout(() => showDone(), 200);
+}
+
+function showDone() {
+  // Save whatever is in the textarea before leaving
+  const ta = document.getElementById('entry-ta');
+  if (ta && ta.value.trim()) saveCurrentEntry();
+
+  document.getElementById('main-area').style.display = 'none';
+  const ds = document.getElementById('done-screen');
+  ds.classList.add('visible');
+
+  // Summary tags
+  const tags = SECTIONS.map(s => ({
+    label: s.title,
+    filled: todayHasEntry(s.id)
+  }));
+  document.getElementById('done-summary').innerHTML = tags.map(t =>
+    `<span class="done-tag ${t.filled ? 'filled' : ''}">${t.label}</span>`
+  ).join('');
+}
+
+function updateSidebar() {
+  let count = 0;
+  SECTIONS.forEach((s, i) => {
+    const has = todayHasEntry(s.id);
+    const btn = document.getElementById('btn-' + i);
+    btn.classList.toggle('has-entry', has);
+    if (has) count++;
+  });
+  const dc = document.getElementById('done-count');
+  dc.textContent = count + ' / 6';
+  dc.classList.toggle('all-done', count === 6);
+
+  const cb = document.getElementById('close-btn');
+  cb.classList.toggle('ready', count === 6);
+  cb.textContent = count === 6 ? '✓ Done — close session' : 'Mark session done';
+}
+
+// ── UTILS ────────────────────────────────────────────────────────
+function formatDate(str) {
+  if (!str) return '';
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const ampm = now.getHours() < 12 ? 'AM' : 'PM';
+  document.getElementById('live-time').textContent = `${h}:${m} ${ampm}`;
+}
+
+function setHeaderDate() {
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  document.getElementById('header-date').textContent =
+    'Reviewing: ' + y.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+// ── INIT ────────────────────────────────────────────────────────
+setHeaderDate();
+updateClock();
+setInterval(updateClock, 30000);
+updateSidebar();
+showSection(0);
+</script>
+</body>
+</html>

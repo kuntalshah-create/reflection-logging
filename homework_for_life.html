@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homework for Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1714;
+    --paper: #f7f4ee;
+    --paper2: #f0ece3;
+    --accent: #c17b3a;
+    --accent-light: #e8d4b8;
+    --muted: #8a8278;
+    --line: #ddd8ce;
+    --success: #4a7c59;
+
+    --t0: #534AB7; --t0bg: #EEEDFE;
+    --t1: #993556; --t1bg: #FBEAF0;
+    --t2: #0F6E56; --t2bg: #E1F5EE;
+    --t3: #185FA5; --t3bg: #E6F1FB;
+    --t4: #854F0B; --t4bg: #FAEEDA;
+    --t5: #3B6D11; --t5bg: #EAF3DE;
+    --t6: #712B13; --t6bg: #FAECE7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── LAYOUT ── */
+  .shell { display: flex; height: 100vh; overflow: hidden; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--ink);
+    color: #e8e2d9;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 28px 0 24px;
+  }
+
+  .logo {
+    padding: 0 24px 24px;
+    border-bottom: 1px solid #2e2a26;
+  }
+  .logo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: #f5f0e8;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .nav-section { padding: 20px 0 0; }
+  .nav-label {
+    font-size: 10px;
+    color: #5a5550;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 24px 8px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    cursor: pointer;
+    color: #b0a898;
+    font-size: 13.5px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { color: #f5f0e8; background: #24201c; }
+  .nav-item.active { color: #f5f0e8; border-left-color: var(--accent); background: #24201c; }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .nav-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: #5a5550;
+    background: #2a2622;
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  .nav-divider { height: 1px; background: #2e2a26; margin: 16px 0; }
+
+  /* MAIN */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .topbar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .topbar-count {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--paper2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .topbar-spacer { flex: 1; }
+  .filter-row { display: flex; gap: 8px; align-items: center; }
+  .filter-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .search-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--ink);
+    width: 180px;
+  }
+  .search-input:focus { outline: none; border-color: var(--accent); }
+
+  /* CONTENT AREA */
+  .content-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+  /* NEW ENTRY FORM */
+  .entry-form {
+    background: var(--paper);
+    border-bottom: 2px solid var(--line);
+    padding: 24px 28px;
+    flex-shrink: 0;
+  }
+  .form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+
+  .date-input, .cat-select, .theme-select-form {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--paper2);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .date-input:focus, .cat-select:focus, .theme-select-form:focus { outline: none; border-color: var(--accent); }
+
+  .entry-textarea {
+    width: 100%;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fffcf6;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 110px;
+    margin-bottom: 12px;
+  }
+  .entry-textarea:focus { outline: none; border-color: var(--accent); }
+  .entry-textarea::placeholder { color: #c4bdb0; font-style: italic; }
+
+  .save-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 22px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.15s;
+  }
+  .save-btn:hover { background: #a5662e; }
+  .saved-flash { font-size: 13px; color: var(--success); display: none; }
+
+  /* ENTRIES LIST */
+  .entries-list { padding: 20px 28px; flex: 1; }
+  .entries-group-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 16px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .entries-group-label:first-child { margin-top: 0; }
+
+  .entry-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.15s;
+    position: relative;
+  }
+  .entry-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+  .entry-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .entry-date { font-size: 11px; color: var(--muted); }
+  .tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .tag-cat {
+    background: var(--paper2);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+
+  .entry-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #2a2520;
+    white-space: pre-wrap;
+  }
+  .entry-text.truncated { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .entry-expand {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 4px 0 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .entry-delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #d0c9c0;
+    cursor: pointer;
+    transition: color 0.15s;
+    line-height: 1;
+  }
+  .entry-delete-btn:hover { color: #c0392b; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: #b0a898;
+  }
+
+  /* WEEKLY REMINDER VIEW */
+  .weekly-view { padding: 32px 28px; overflow-y: auto; flex: 1; }
+  .weekly-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .weekly-sub { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+
+  .commitment-section {
+    margin-bottom: 28px;
+    padding-left: 18px;
+    border-left: 3px solid;
+    border-radius: 0;
+  }
+  .commitment-section h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .commitment-section ul { list-style: none; padding: 0; }
+  .commitment-section li {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #3a342e;
+    padding: 3px 0;
+  }
+  .commitment-section li::before { content: "— "; color: var(--muted); }
+
+  /* WEEK STREAK BAR */
+  .streak-bar {
+    display: flex;
+    gap: 6px;
+    padding: 16px 28px;
+    background: var(--paper2);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .streak-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-right: 4px; }
+  .streak-day {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 500;
+    background: white;
+  }
+  .streak-day.done { background: var(--accent); color: white; border-color: var(--accent); }
+  .streak-day.today { border-color: var(--accent); color: var(--accent); }
+
+  .total-count { margin-left: auto; font-size: 12px; color: var(--muted); }
+
+  /* THEME PILLS INLINE */
+  .theme-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  @media print {
+    .sidebar, .topbar, .entry-form, .streak-bar { display: none !important; }
+    .main { overflow: visible; }
+    .content-area, .entries-list { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-title">Homework<br>for Life</div>
+      <div class="logo-sub">Kuntal's journal</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Journal</div>
+      <div class="nav-item active" onclick="showView('all')" id="nav-all">
+        <div class="nav-dot" style="background:#b0a898"></div>
+        All entries
+        <span class="nav-count" id="cnt-all">0</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Growth themes</div>
+      <div class="nav-item" onclick="showView('t0')" id="nav-t0">
+        <div class="nav-dot" style="background:var(--t0)"></div>
+        Be myself
+        <span class="nav-count" id="cnt-t0">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t1')" id="nav-t1">
+        <div class="nav-dot" style="background:var(--t1)"></div>
+        Love better
+        <span class="nav-count" id="cnt-t1">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t2')" id="nav-t2">
+        <div class="nav-dot" style="background:var(--t2)"></div>
+        Connect better
+        <span class="nav-count" id="cnt-t2">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t3')" id="nav-t3">
+        <div class="nav-dot" style="background:var(--t3)"></div>
+        Think better
+        <span class="nav-count" id="cnt-t3">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t4')" id="nav-t4">
+        <div class="nav-dot" style="background:var(--t4)"></div>
+        Work better
+        <span class="nav-count" id="cnt-t4">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t5')" id="nav-t5">
+        <div class="nav-dot" style="background:var(--t5)"></div>
+        Be present
+        <span class="nav-count" id="cnt-t5">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('t6')" id="nav-t6">
+        <div class="nav-dot" style="background:var(--t6)"></div>
+        Serve & give
+        <span class="nav-count" id="cnt-t6">0</span>
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Categories</div>
+      <div class="nav-item" onclick="showView('cat-OFNR - Self')" id="nav-cat-OFNR - Self">
+        <div class="nav-dot" style="background:#6c8ebf"></div>
+        OFNR – Self
+        <span class="nav-count" id="cnt-cat-OFNR - Self">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-OFNR - Other')" id="nav-cat-OFNR - Other">
+        <div class="nav-dot" style="background:#82b366"></div>
+        OFNR – Other
+        <span class="nav-count" id="cnt-cat-OFNR - Other">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-People Pleasing')" id="nav-cat-People Pleasing">
+        <div class="nav-dot" style="background:#d6a84e"></div>
+        People pleasing
+        <span class="nav-count" id="cnt-cat-People Pleasing">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-Story')" id="nav-cat-Story">
+        <div class="nav-dot" style="background:#9673a6"></div>
+        Story
+        <span class="nav-count" id="cnt-cat-Story">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-Payal Letter')" id="nav-cat-Payal Letter">
+        <div class="nav-dot" style="background:#e07070"></div>
+        Payal / loving her
+        <span class="nav-count" id="cnt-cat-Payal Letter">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-Thoughts')" id="nav-cat-Thoughts">
+        <div class="nav-dot" style="background:#a0a0a0"></div>
+        Thoughts
+        <span class="nav-count" id="cnt-cat-Thoughts">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('cat-Event')" id="nav-cat-Event">
+        <div class="nav-dot" style="background:#7a9e8e"></div>
+        Event
+        <span class="nav-count" id="cnt-cat-Event">0</span>
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-item" onclick="showView('weekly')" id="nav-weekly">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Weekly reminder
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- JOURNAL VIEW -->
+    <div id="journal-view" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div class="topbar-title" id="topbar-title">All entries</div>
+        <span class="topbar-count" id="topbar-count"></span>
+        <div class="topbar-spacer"></div>
+        <div class="filter-row">
+          <input class="search-input" type="text" placeholder="Search..." oninput="renderEntries()" id="search-box">
+          <select class="filter-select" onchange="renderEntries()" id="sort-select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- STREAK BAR -->
+      <div class="streak-bar" id="streak-bar"></div>
+
+      <!-- CONTENT -->
+      <div class="content-area">
+        <!-- ENTRY FORM -->
+        <div class="entry-form">
+          <div class="form-row">
+            <div>
+              <div class="form-label">Date</div>
+              <input type="date" class="date-input" id="entry-date">
+            </div>
+            <div>
+              <div class="form-label">Growth theme</div>
+              <select class="theme-select-form" id="entry-theme">
+                <option value="">— none —</option>
+                <option value="t0">Be myself</option>
+                <option value="t1">Love better</option>
+                <option value="t2">Connect better</option>
+                <option value="t3">Think better</option>
+                <option value="t4">Work better</option>
+                <option value="t5">Be present</option>
+                <option value="t6">Serve & give</option>
+              </select>
+            </div>
+            <div>
+              <div class="form-label">Category</div>
+              <select class="cat-select" id="entry-cat">
+                <option value="Personal">Personal</option>
+                <option value="OFNR - Self">OFNR – Self</option>
+                <option value="OFNR - Other">OFNR – Other</option>
+                <option value="Story">Story</option>
+                <option value="Event">Event</option>
+                <option value="Thoughts">Thoughts</option>
+                <option value="People Pleasing">People pleasing</option>
+                <option value="Payal Letter">Payal / loving her</option>
+                <option value="CH-Grassroots">CH – Grassroots</option>
+                <option value="CH-Culture">CH – Culture</option>
+                <option value="Low Confidence">Low confidence</option>
+                <option value="Gratitude">Gratitude</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <textarea class="entry-textarea" id="entry-text" placeholder="What happened today? A moment, a conversation, a realisation. Let it out as it is."></textarea>
+          <div style="display:flex;align-items:center;gap:14px;">
+            <button class="save-btn" onclick="saveEntry()">Save entry</button>
+            <span class="saved-flash" id="saved-flash">✓ Saved</span>
+          </div>
+        </div>
+
+        <!-- ENTRIES -->
+        <div class="entries-list" id="entries-list"></div>
+      </div>
+    </div>
+
+    <!-- WEEKLY VIEW -->
+    <div id="weekly-view" style="display:none;flex:1;overflow-y:auto;">
+      <div class="weekly-view">
+        <div class="weekly-header">My commitments</div>
+        <div class="weekly-sub">Read this every week. Let it land. Let it guide you back.</div>
+
+        <div class="commitment-section" style="border-color:var(--t0)">
+          <h3 style="color:var(--t0)">Be myself</h3>
+          <ul>
+            <li>Stop hiding behind pleasing others. Share authentic thoughts, even when uncomfortable.</li>
+            <li>Tough conversations are not bugs — they are features of life. Do not avoid them.</li>
+            <li>Take complete ownership. Do not blame dad, Hardik, Nachiket, Abhishek, Payal, or the past.</li>
+            <li>Having a bad opinion about something is not against dharma. It does not make you bad.</li>
+            <li>Let fear not drive you. Act from integrity, not from what others expect.</li>
+            <li>Wrong defence and opportunistic defence are the worst. Good is the opposite of right.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t1)">
+          <h3 style="color:var(--t1)">Love better</h3>
+          <ul>
+            <li>Find the courage not to hide anything from her. Be fully honest with those you love.</li>
+            <li>Listen to emotions and needs, not just words. Be present, not distracted.</li>
+            <li>Cherish her and make her feel special — today, not someday.</li>
+            <li>Never say "time nathi" to family. That signals they are not a priority.</li>
+            <li>Say "Have a good day" when they leave. Return home fresh — not drained and distracted.</li>
+            <li>Mom-Dad page lago. Do not share financial fear or work pressure with them.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t2)">
+          <h3 style="color:var(--t2)">Connect better</h3>
+          <ul>
+            <li>Start conversations with something non-work, interesting, relevant.</li>
+            <li>Make real eye contact. Be fully there, not in the next thought.</li>
+            <li>Replace complaints with NVC: observe, feel, need, request.</li>
+            <li>Do not be time-pressed. Let others finish. Do not rush to say your point.</li>
+            <li>Appreciate people proactively and specifically — not just as a habit.</li>
+            <li>Bhai — respect and observe, do not judge.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t3)">
+          <h3 style="color:var(--t3)">Think better</h3>
+          <ul>
+            <li>Think from a post-death angle. What truly matters in the long run?</li>
+            <li>Empathy is not fusion. Care does not require self-erasure.</li>
+            <li>Act from awareness, not duty. Awareness-based choice creates real discipline.</li>
+            <li>Do not react to short-term triggers — money tension, anger, uncertainty.</li>
+            <li>Do not doubt or compare yourself. Comparison is a killer.</li>
+            <li>Use the Vedic lens: Jad-Chetan, Karma-Fal. Everything can be understood through this.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t4)">
+          <h3 style="color:var(--t4)">Work better</h3>
+          <ul>
+            <li>Prepare for every meeting: outcomes, obstacles, how to overcome. Share agenda.</li>
+            <li>Conclude meetings clearly: decisions, actions, owners, information.</li>
+            <li>Work at L2. Do not get consumed by L1 firefighting.</li>
+            <li>Think first — do not GPT as the first thinking tool.</li>
+            <li>Protect deep work. Two 2-hour slots per week, minimum.</li>
+            <li>Delegate assuming people are smarter. Pass the driving to team members.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t5)">
+          <h3 style="color:var(--t5)">Be present</h3>
+          <ul>
+            <li>Smile more — at standup, when someone leaves, while talking.</li>
+            <li>Look good whenever you go out. Check the mirror. Say you look great.</li>
+            <li>Observe your surroundings. Be aware of the room, the person, the moment.</li>
+            <li>Stop next-task thinking during meetings. You can wait in the moment.</li>
+            <li>Things are improving. Do not hold only the half-empty view. Have utsaah.</li>
+          </ul>
+        </div>
+
+        <div class="commitment-section" style="border-color:var(--t6)">
+          <h3 style="color:var(--t6)">Serve & give</h3>
+          <ul>
+            <li>Charity is a lifestyle, not just a gift. Make seva a routine, not an event.</li>
+            <li>Give your full attention. Give your expertise generously. Listen charitably.</li>
+            <li>Level up people around you — team, family, community.</li>
+            <li>Share weekly resources. Present or attend one event a month.</li>
+            <li>Read charitably: give every author the most favorable interpretation.</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:32px;padding-top:20px;border-top:1px solid var(--line);">
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.8;">
+            "When I imagine others getting upset or leaving, I notice fear and tension in me.<br>
+            I choose to act from integrity rather than fear, even when I don't know the outcome."
+          </div>
+        </div>
+
+        <button onclick="window.print()" style="margin-top:28px;font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 22px;border:1px solid var(--line);border-radius:6px;background:transparent;cursor:pointer;color:var(--muted);">Print / save as PDF</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const THEMES = {
+  t0: { label: 'Be myself',     color: '#534AB7', bg: '#EEEDFE' },
+  t1: { label: 'Love better',   color: '#993556', bg: '#FBEAF0' },
+  t2: { label: 'Connect better',color: '#0F6E56', bg: '#E1F5EE' },
+  t3: { label: 'Think better',  color: '#185FA5', bg: '#E6F1FB' },
+  t4: { label: 'Work better',   color: '#854F0B', bg: '#FAEEDA' },
+  t5: { label: 'Be present',    color: '#3B6D11', bg: '#EAF3DE' },
+  t6: { label: 'Serve & give',  color: '#712B13', bg: '#FAECE7' },
+};
+
+const CAT_COLORS = {
+  'Personal':       '#7a8a9a',
+  'OFNR - Self':    '#6c8ebf',
+  'OFNR - Other':   '#82b366',
+  'Story':          '#9673a6',
+  'Event':          '#7a9e8e',
+  'Thoughts':       '#a0a0a0',
+  'People Pleasing':'#d6a84e',
+  'Payal Letter':   '#e07070',
+  'Payal Letter / Loving Her': '#e07070',
+  'CH-Grassroots':  '#5d8a72',
+  'CH-Culture':     '#5d7a8a',
+  'Low Confidence': '#b07070',
+  'Low Confidence/ Self Doubt': '#b07070',
+  'Low Confidence/ Self Doubt / Comparison': '#b07070',
+  'Gratitude':      '#b0a060',
+  'Confidence':     '#7a9e6e',
+  'Be Yourself':    '#534AB7',
+  'Quick Opinion Change': '#c07040',
+  'Overcommitment': '#a07050',
+  'Evaluation - Self': '#806080',
+  'Other':          '#909090',
+  'OFNR - Other':   '#82b366',
+};
+
+function normalizeCategory(cat) {
+  if (!cat) return 'Personal';
+  const c = cat.trim();
+  if (c.startsWith('Payal Letter')) return 'Payal Letter';
+  if (c.startsWith('Low Confidence')) return 'Low Confidence';
+  return c;
+}
+
+// Raw CSV data converted to JS objects
+const CSV_ENTRIES = [
+{"date":"10/14/2024","text":"Dharmik buying iPhone worth 1.4L. I can never think of buying it even at 4L salary and he is just earning below 50k. How these things happen? I wonder.","cat":"Personal"},
+{"date":"10/15/2024","text":"A child by mistake deleted his matches from father's phone and was very concerned if he can get back. Support team aise cases mein illegally bhi kar denge.","cat":"CH-Grassroots"},
+{"date":"10/14/2024","text":"I had negative feelings for the whole incident where by Payal felt that I have pulled her down always, my bhabhi when she got money for my brother she had a return condition but never did they think on returning money that me or my father gave and we all are in bad condition.\nShe looks to them as if they have cheated us. She also blamed me for being optimistic. I was feeling very negative and I did not want to be negative.\n\nThen this line occurs to me.\nNo one cheated us everyone believed in some story and that got wrong\n\nAnd it started making me positive and I started finding solutions again.","cat":"Personal"},
+{"date":"10/16/2024","text":"Gali bam to Montu\nHow childhood moments resurface and you enjoy a lot. I did to her when she hit Shaurya and Shaurya complained.","cat":"Personal"},
+{"date":"10/16/2024","text":"I was on my way to doing errands and meet this shingoda seller. He said itne mein kya time lagta hai. How we do not have time. How much was he courteous and thankful and I was not — I was only transacting. He also asked mp kitne din ke liye Jaa rahe ho.\n\nWhy do we not have time?","cat":"Personal"},
+{"date":"10/16/2024","text":"Standup support\nEmotions\nDharmik - iphone reminding father\nRonak - sister can not think if he will meet again or not. I want to make her feel proud.\nHow I have lost those emotions in the process of being responsible?","cat":"Personal"},
+{"date":"10/22/2024","text":"Ravibhai was looking for supporting me and I thought he was with some other negative intentions.\n\nHow we can not trust others. How I wish I could have thought positively.","cat":"Personal"},
+{"date":"10/24/2024","text":"Ashish on DB3 work \"tame kehsho to hun kari daish\"\nAt what all level I want him to commit after disagreement.\n\n- If things fail I am 100% there in all the cases.\n\nBut after you committing:\n- If you see any issues bring to my notice.\n- If you talk to anyone say that I was in disagreement but now I decided to commit on these basis.\n- When you commit understand / not agree on the basis of which we are committing.","cat":"CH-Culture"},
+{"date":"10/28/2024","text":"Rick driver on way back from office.\nHow we do not have time for anyone these days?\nEarning and spending money is the main time killing activity.","cat":"Personal"},
+{"date":"10/28/2024","text":"Rick driver from pakwan to karnavati — how bums ache after driving rickshaw for a man with weight.","cat":"Personal"},
+{"date":"10/28/2024","text":"Many people in order to meet ends need to earn in multiple ways.\nRick driving in side with a day job.\nRick driving in side with tea stall.\nHow money making has become harder?","cat":"Personal"},
+{"date":"11/2/2024","text":"What you feel inside.\nDance example.\nHow you see from outside.\nHow the one feels inside.","cat":"Personal"},
+{"date":"11/7/2024","text":"How teaching kids is so important.\nHow Fenil seems tough on kids but teaches the right thing.\nFenil teaching Dhyey the game of Declare — focus is only on teaching right thing.","cat":"Personal"},
+{"date":"11/12/2024","text":"How the early stage startup days are?\nWhen you progress in life you forget some cherishable moments and then when you see them again you feel living them again and feel good about it.\n\nHomeground team sharing their story of 4 years journey and how they remained honest.","cat":"Personal"},
+{"date":"11/12/2024","text":"How finding Maharshi and talking to homeground started making a lot of sense of progress. Many times in life there are phases of progress and quantum of progress.","cat":"Personal"},
+{"date":"11/13/2024","text":"During meditation:\nThink when it ends.\nThink what is next.\nThink what I am doing and how can it be better.\n\nMost of the times I have thought about first two and how can I be more present.","cat":"Personal"},
+{"date":"11/13/2024","text":"Pencil gone from life as Shaurya has stopped using pencil. Things that when we leave we love to leave and then later on we yearn for it.","cat":"Personal"},
+{"date":"11/12/2024","text":"Did not say what Hardik was upset about during dinner to Payal — observe this.","cat":"Personal"},
+{"date":"11/14/2024","text":"Life is a race and life is a journey.\nWhen we dropped kids and I was rushing to go back home and Payal stopped till kids boarded bus.","cat":"Personal"},
+{"date":"11/2/2024","text":"Learn and practice to think about yourself in right way.\nSimulate decisions — do not only remain hopeful and take only one optimistic view.\nThis will level up decision making in your life.","cat":"Thoughts"},
+{"date":"11/7/2024","text":"When I was visiting Kanha Jungle during Safari, I found that how separate the jungles are from places where humans live — but had there been a time in past where animals and humans had lived in harmony? Where humans also used to live in Jungle.","cat":"Personal"},
+{"date":"11/19/2024","text":"Who has done it? — is an ego question. What do you get out of it?","cat":"Thoughts"},
+{"date":"11/25/2024","text":"I went to Abhishek with solution architect hiring thoughts on why we should not hire him and it worked out. I did not think it would go that easy.","cat":"Event"},
+{"date":"11/25/2024","text":"Two places I became less violent while returning with Kashyap:\n1. How we could have avoided the downtime with matches query updating first.\n2. How pro discounts actually has increased revenue.","cat":"OFNR - Self"},
+{"date":"11/25/2024","text":"Starting yesterday when the server error has come Abhishek has not involved me and I had feeling that he does not want to involve me and eventually wants to take away things from me to make me feel useless. I constantly kept searching for events that prove that.","cat":"OFNR - Self"},
+{"date":"11/25/2024","text":"When you become consistent and you tend to improve the following kind of experiences happen.\nI was looking at my personal work discipline and I today added one powerful tool of reverse engineering from my main goal. This has helped me think really well around what should I be doing right now if I want to pursue goal of making 100 Cr. Revenue.\n\nHabits improve and that improve is worth the wait.","cat":"Personal"},
+{"date":"11/25/2024","text":"Met Aditya for walk at oxygen park.","cat":"Event"},
+{"date":"11/26/2024","text":"Payal discussion around how selling cars and not getting deposit money is not my priority and mom telling to fill less papaya triggered her.\n\nI decided to stop eating sweets till things get to stability.","cat":"Event"},
+{"date":"11/26/2024","text":"- Stop preaching and see what you are doing more.\n- What is the underlying reason of not being able to be practical? Is it emotions? Is it duty? Is it not being able to have hard conversation on either side?\n- What is wrong here according to you? Should you do anything around that wrong? Why is she not valued in house?","cat":"Thoughts"},
+{"date":"11/27/2024","text":"An eCommerce support vs a CricHeroes support.\nAt the end you have a choice to return or refund or replace.\nAt CricHeroes it is not that simple. You have to edit the score, and more importantly mediate looking at the situation. We can also be a platform without emotion towards your cricket and simply say this is not my problem you deal with it. But instead we try to understand where they are coming from and try to do whatever we can even when we know it is hard to do.","cat":"CH-Grassroots"},
+{"date":"11/27/2024","text":"I would not like to meet Anjali if Abhi is around — I will feel awkward.","cat":"OFNR - Self"},
+{"date":"11/27/2024","text":"I will not go with Rima because if I go down with her for car Kashyap may notice and feel bad, and if I ask Rima to wait outside she may feel bad.","cat":"OFNR - Self"},
+{"date":"11/27/2024","text":"Two days back to back.\n\nDay 1 Payal gets angry due to mummy and loses on mummy and you try to understand and please her. She angrily says she won't let anyone come in house.\n\nPayal gets okay next day and you feel very good about it.\n\nDay 2 Hardik gets angry due to cold war between Payal and Namrata and parents suffer due to that. He mentions how Payal is mistreating him by not talking to him.\n\nAre you trying to make everyone happy here?\nAre you waiting for the right time to say things / preach?","cat":"OFNR - Self"},
+{"date":"11/29/2024","text":"Learning works in step function. Sometimes you learn so much in a meeting of an hour that is more than what you have learnt in years. Example: one meeting around RDS performance issue leveled up understanding of how threading can hurt performance.","cat":"Thoughts"},
+{"date":"11/28/2024","text":"Instead of having a non-violent communication can we have a conversation with energy, humour and which is more pleasant?","cat":"Thoughts"},
+{"date":"12/3/2024","text":"Meeting with Siddharth on what good leadership can be.","cat":"Event"},
+{"date":"12/3/2024","text":"When Hardik said about preparing food in a way that Payal did not have dinner.","cat":"Event"},
+{"date":"12/3/2024","text":"Good leadership lessons:\n- Be with them when they are unable to move things.\n- Be firm on your stand and fight for it as well if needed. Do not lose it easily for the sake of being good or accommodative.\n- Firm up belief in boring management and appreciate boring management.\n- Putting up a point is not important — making sure it goes further as a leader if you really want something to pass through.\n- You won't be able to make everyone happy.\n- Not everything needs reaction.\n- Focus on long term impact. Be demanding and have an eye for quality.","cat":"Thoughts"},
+{"date":"12/5/2024","text":"Payal while going on reception floor, I told her not to hurry and she became defensive. I could have told her that I see you going up before others come down.","cat":"OFNR - Other"},
+{"date":"12/6/2024","text":"How I reacted saying you finish it quickly and do not make it beyond 3 pm for Shweta's meeting. I could have just said do you think it will take long for you, I just wanted that if possible leave early.","cat":"OFNR - Other"},
+{"date":"12/6/2024","text":"While talking to Birva over call how she said that Hundias were busy showing that we are Marvadis and we show that arrogance.\n\nI observed that I saw a good family values and then kept on thinking around that. Then I started seeing how can I adopt it and where am I missing it. I did not see the other part. Even Aanshi told me that it looks more like male dominating stuff. So I feel I was not able to observe holistically.","cat":"OFNR - Self"},
+{"date":"3/13/2025","text":"On the walk today while talking about respect, she explained me how it hurts her that it is always respect and her that is being seen, not anything else.\n\nI learnt that apart from respect the authority or control is another thing that my brother will need and if that need is unmet the behavior affects.\n\nI also realised that she being opinionated is the main thing which we are not adjusting to.\n\nPost that when we were talking about party expense, I realised that I was just trying to satisfy my ego that I at least did something and in that process I was not able to see the gratefulness that I can have for the things she is doing.","cat":"Thoughts"},
+{"date":"3/13/2025","text":"I have not thanked you enough till date for the things that you have done for yourself which I should have done for you.\nI have not thanked you enough till date for the things that you have done for me by bringing things for me and always seen it from simplicity lens or I could have spent on something else.","cat":"Payal Letter"},
+{"date":"3/14/2025","text":"I sometimes jokingly say that I can do without you. But very frankly I learnt that I can not think of living without you. I feel I do not do most of the things without asking you.","cat":"Payal Letter"},
+{"date":"3/24/2025","text":"When Hardik and I was having lunch at that time dad was leaving and he was going to take the tiago car and was going to load it with kitchen baskets for Nareshbhai.\n\nDad got angry on Hardik when he said not to load fully.\n\nDad:\nEvaluation of Hardik — you always think that I do not care about work.\nFeeling: frustration.\nNeed: independence.\nRequest: not to come in between.\n\nHardik:\nEvaluation: he does not care about car and he goes over board for Naresh.\nFeeling: embarrassed.\nNeed: to be heard.\nRequest: take care of car.","cat":"OFNR - Other"},
+{"date":"3/20/2025","text":"With Hexon team I could have been transparent when decided to take things inhouse and avoided a lot of confusion, waste of time and money, and agitation within teams.","cat":"Event"},
+{"date":"3/18/2025","text":"While discussing Karma plan, I could have been listening and suggesting mode to Amrita's plan rather than explaining my plan and sticking to it and explaining its logic.","cat":"OFNR - Self"},
+{"date":"3/25/2025","text":"When I can not afford other 2 kids.\nI feel sad and conflicted because I need fairness, joy, and care for each of you.\nHence can we try and go in parts?","cat":"OFNR - Self"},
+{"date":"4/3/2025","text":"How I am a failure in married life — not taking care of emotional and financial needs of my wife and kids.","cat":"Personal"},
+{"date":"5/5/2025","text":"I need to stop judging people early on.\nWhen Siddharth was sharing idea about matches I assumed he did not think about some scenarios before reading his document.\nI need to first understand and listen what he has done so far.\n\nMy observation: I last time while talking to Siddharth did not listen his full side on the project and started judging.\nMy feeling: I felt unhappy about it.\nMy need: I need to respect his time and listen to his ideas better.\nMy request: I should ask proper follow on questions and understand more before giving my ideas forming my opinion.","cat":"OFNR - Self"},
+{"date":"6/4/2025","text":"She told following two things:\n- I do not take care of her during period and only ask how is the flow and not ask how is the pain.\n- I am not being truthful to her when I did not tell her about the Baleno accident.\n- I am talking a lot about having hard conversation and not pleasing everyone but not doing anything there.\n\nI realised:\n- I have not been taking her responsibilities when it came to taking hard steps in fulfilling responsibilities towards her in 18 years of relationship.\n- I should be working on the two points — not pleasing and having difficult conversation wherever required.","cat":"Event"},
+{"date":"6/12/2025","text":"Thank you for conversing today.\n\nWhat I felt: not judged, loved, heard, and thankful (for the way you have stood to the mistakes that I have made in our married life.)\n\nThings I remember and will reflect:\n1. I should not wrongfully empathise with my brother.\n2. How giving money/helping others has other important conditions.\n3. How two things I learnt wrong — if you have money donate, wrong implementation of kindness.\n4. Business growth requires a growth mindset, willingness to earn more and get better at your work.","cat":"Event"},
+{"date":"6/13/2025","text":"I got agitated when she kept on telling I am not understanding around how the dinner item used to get decided. She felt I got angry and have never felt such before.\nShe also felt that I do not want to live any more just want to live for Shaurya now.\nFelt very bad that day.\nNeed to learn a better way to share my feelings and not stopping to share.","cat":"Event"},
+{"date":"6/21/2025","text":"Discussion with Montu.\nEvent: Her friends have started not talking to her.\nLearning:\nHow to live with self confidence and how to be yourself?\nHow to stand for yourself when you feel you are right?\nHow to look at when you are in mistake?\nHow to read others?\nHow to keep your boundaries?","cat":"Event"},
+{"date":"6/21/2025","text":"Event: AWS Community Day Presentation.\n\nObservations:\nI mostly keep running and do not have time for anything.\nI went in hush and to please Payal I was trying to get Montu to take to movie.\nI listened to her frustration when things did not pan out well for her.\n\nLearning:\nPleasing does not help you.\nYou need to be clear on what your priorities are for your life and tell it clearly.\nLet everyone own the homework.","cat":"Event"},
+{"date":"6/22/2025","text":"Event:\nMontu did not like when I said to finish work first before talking to Aadi.\nI did not try to please her right after that.\nI kept on craving for that.\nI shared my view as well which I used not to do.\n\nLearning:\nShare your views.\nLet difficult conversation happen.","cat":"Event"},
+{"date":"6/22/2025","text":"Have your choices and impression.\nBe yourself and do not please everyone.\nDemand quality in order to grow.\nHow rugged and haphazard approach which I have kept for most part of my life will not help me grow further.","cat":"Event"},
+{"date":"6/22/2025","text":"Following rules as citizen and do not become cheap and try to mature while driving — do not take unnecessary and cheeky shortcuts.","cat":"Event"},
+{"date":"7/2/2025","text":"Payal told me:\nI am ungrateful. I have used her mentally, physically, and financially.\n\nI can not cry. I can not speak. But I can write.\nWish from God: Return to kul, 1000 gani khushi, 10 ppl.\n\nIf you can not say it — write it.","cat":"Event"},
+{"date":"9/17/2024","text":"I was happy for the progress made in day. Had a good meeting with Rishab around current form, had good discussion on leadership catchup, good clarity happening with NNL thing, and first payment from streaming services.","cat":"OFNR - Self"},
+{"date":"9/17/2024","text":"While going to office I felt lost on what am I trying to achieve in my life? Last night discussion with Aanshi happened, in morning the discussion about car happened, while going to office the discussion about my wish happened. I felt as if all of this is not helping me help people around me. I am finding it difficult to buy home, help my brother, make Payal happy and take away her worries, make mom and dad relax a bit.","cat":"OFNR - Self"},
+{"date":"9/12/2024","text":"I went on defensive first and ego came in between when she said this is like begging and then upon thinking around it quickly realised that it was my fear and low confidence of not getting business that was speaking — not anything else. When I learnt that I felt excited about the same.","cat":"OFNR - Self"},
+{"date":"8/29/2025","text":"I did not understand her again.\nShe was telling me about she wanting a kitchen outside and I kept on logically arguing instead of understanding her needs.\nShe felt I am not even understanding her after 18 years.","cat":"Event"},
+{"date":"1/5/2026","text":"Morning, went to say mom namaste, she said wear jackets and surprisingly I wore it. Connecting with how we value different things as we age. My mom's peace is more valuable to me than my free choices.","cat":"Event"},
+{"date":"1/5/2026","text":"I observed that Hiral offered me water when I was checking for water bottle. I felt tickled that how well she observes people around.","cat":"OFNR - Self"},
+{"date":"1/5/2026","text":"At breakfast table, yesterday what happened — I tried to be dad with kids on the way to cheers and thought should be friends and realised how they will be gone in some time.","cat":"Event"},
+{"date":"1/6/2026","text":"While having meeting with Rishab, Yeragra, Aditya — how much observant and conclusive Rishab can be.\n\nOn the contrary how I only work on today's information and right now and unable to link and observe stuff. This is limited information gathering. It looks like a great simplification and not helpful.","cat":"Event"},
+{"date":"1/7/2026","text":"Payal was not happy with the way Shaurya was taking studies.\nShe gave feedback to Shaurya and first he started disagreeing but more he wanted to understand what his mother was trying to say.\nHe did agree and then woke up till 11pm to finalise his homework.\nAha for me — how much context Payal had, how much she could see what is not happening.","cat":"Event"},
+{"date":"1/12/2026","text":"When we were talking with Kanhai how naturally Abhi said that Sanket and Nachiket were not competent and I never wanted to do this business. He was so clear and I always thought world from others' perspective.","cat":"Event"},
+{"date":"1/19/2026","text":"On lunch when I said that Payal stayed home due to Aanshi's exam, she felt awkward as she stayed home on Friday as there was overall work from home.","cat":"OFNR - Other"},
+{"date":"1/19/2026","text":"When I spoke to Mehul out of nowhere and came to know about his son's name and could spark conversation with him. I felt fulfilled.","cat":"OFNR - Self"},
+{"date":"1/19/2026","text":"I can also be good at it.\nFor many days I was feeling this is hard, I am not able to do it.\nToday I did it — such a small thing but what a realisation.\nI could talk on non work and strike interesting conversation. (Grihit mom, Mehul son, Rima pollen allergy, Everyone sweets.)\nAll things start to make sense.","cat":"Event"},
+{"date":"1/20/2026","text":"I asked for cabbage salad which I usually do not ask.","cat":"Payal Letter"},
+{"date":"1/12/2026","text":"I wanted to say NO to DR Shah for IPO but could not say and kept justifying why I was right.","cat":"People Pleasing"},
+{"date":"1/12/2026","text":"I would never say that Sanket and Nachiket were not competent to a 3rd person even when he is opening like Kanhai talked about Hemal. I would not share about Sanket and Nachiket assuming that is wrong or what if they hear it.","cat":"People Pleasing"},
+{"date":"1/8/2026","text":"Had opinion that STO prep should be better. Would you share it? Or not — assuming that everything went well.","cat":"People Pleasing"},
+{"date":"1/8/2026","text":"Communicate your opinion with Payal that you understand her plight — only thing you can offer is helping hand and later on ability to sit back home.","cat":"People Pleasing"},
+{"date":"1/21/2026","text":"Missing the bus and optimism.\n\nI always felt that there is always a chance and that is optimism I carried.\nWhile talking to Rishab and Maharshi I saw that Rishab was not trying to take chance and I kept on nudging him.\n\nI realised that missing bus or ab pachhtaye kya jab chidiya chug gayi khet is a reality and nothing wrong about it.\n\nWhat happens is that the other guy Maharshi will not be a fit in long run — he will face problem in short run. Second argument is if you miss this bus catch some other bus — that is how you can also look at it as a positive outcome.","cat":"Story"},
+{"date":"1/21/2026","text":"I observe that I was the one which started sharing no to B2B store and then I am the one who ended up with compelling argument to do that.\n\nThis at jr or md level looks like a great thing but at sr leadership level this kind of switching does not look good.\n\nWhat I can do instead I can put this up as question: 'What happens if we do not do B2B?' instead of 'in my opinion let us not do B2B.'","cat":"OFNR - Self"},
+{"date":"1/21/2026","text":"While deciding on Maharshi.\n\nThe pattern here to watch:\n1. You want to try to keep him and you find him a good person but you are not able to see the issues.\n2. You do not see a long term wrongful impact of doing this.\n3. You still want to keep him happy for the short term.\n4. You always were doubting — are we not getting the right person out?\n\nYou find it hard to be right. You find it hard to form a negative opinion. Because you leave things to chance. Back to pleasing people.","cat":"OFNR - Self"},
+{"date":"1/21/2026","text":"You know what — I made dhokla on my own without any help. Brought curd at last moment. Did chilli last moment. Made sure Shaurya got it in tiffin.\nFelt sense of achievement.","cat":"Story"},
+{"date":"1/21/2026","text":"Very small thing but at lunch table with Digicorp team I asked for taking last bite of paneer after asking everyone. This I would not do feeling that how would others feel.\n\nBack to — make them feel good and share energy. Kanhai.","cat":"Confidence"},
+{"date":"1/25/2026","text":"While at lunch with Abhishek, Nachiket, and Payal — I did not add nuance of how respect in non-tech is being added. I have this habit of saying too good things for a person and forget adding nuance — maybe by that I just look more humble.","cat":"People Pleasing"},
+{"date":"2/9/2026","text":"Something I heard today and very interesting and I even applied it today and found results.\nPayal explained Aanshi how Maa was greeting people coming home and she wanted to make sure that anyone coming home feels relaxed.\nHow can we also apply the same — not by asking people how was your day instead are you hungry or understanding where he is right now.\nI tried with Shaurya on way back from office — asked him whether he is hungry or whether he is tired and he must have felt good.","cat":"Story"},
+{"date":"2/9/2026","text":"About retreat feedback.\nI find that there was serious feedback on retreat:\n1. Chintan's attitude.\n2. It was not a company retreat — it was 3-4 group retreats.\n3. Abhishek was also not attending everyone.\n\nI could not say this but when I found support I double down on it.\nI need to have courage for my opinions.","cat":"People Pleasing"},
+{"date":"2/9/2026","text":"I'm feeling satisfied because my needs for effectiveness and progress were met today while working on capture. I worked on Capture team plan — an important point, cleared out team with Rishab, looked at all capture issues, completed work focus nicely.","cat":"OFNR - Self"},
+{"date":"2/9/2026","text":"When I played TT with the team this evening, I felt happy and energised because it met my needs for play, connection, and competence. I'm committing to playing regularly to build my skills, and I'm excited about working towards winning an office tournament.","cat":"OFNR - Self"},
+{"date":"1/7/2026","text":"Went in negative spiral — how my work is not getting done. Some kind of imposter syndrome.\n\nWhat were positive thoughts that took me out of it?\n- Possibilities of what can happen.\n- Seeing things that are happening.\n\nFrom negative thoughts once I start seeing possibilities of what all can happen and realise what all I have done I feel positive. Do not focus on what is not happening — focus on possibilities and things you have done. This will keep you positive and confident.","cat":"Thoughts"},
+{"date":"2/10/2026","text":"Went to book trip at AMTPL and last moment decided to switch and check Parikh Holidays from Ankit. How some things happen suddenly and I also got idea of having a night in Dehradun in return.\n\nI still could not say her on face that I am checking in with my other friend.","cat":"Story"},
+{"date":"2/10/2026","text":"Rolex discussion.\nI accidentally asked Abhishek that is your watch Rolex then I went on to appreciate him. Then I also shared that when I was listening to this episode I was looking to buy one — is this me or why would I say that — was I authentic? He said Minal gifted him and he was not aware of the price.\n\nNot sure — was I trying to make him feel good. Do I think buying Rolex is worth or not? Can I share that opinion with him?","cat":"People Pleasing"},
+{"date":"2/10/2026","text":"Today in meeting first I decided that before 31st March I would try and ship cameras and then Parth said that we need to be extra careful here — I started agreeing with him. This is sign of weak judgement or hasty decision making.","cat":"Quick Opinion Change"},
+{"date":"2/12/2026","text":"When I came back home I saw dad and asked how is he feeling after Kaka has left. He first said which was anticipated response was that I am okay no feelings. And then I asked — we all have feelings but we have not learnt to recognised it or even accept it. And then he said I will miss him a lot and he takes me back to pole days.\n\nHow much are we unaware of feelings and how can we be more humans with feelings and emotions?","cat":"Story"},
+{"date":"2/12/2026","text":"During today's meeting, when I shared my opinions, asked hard questions, and spoke without worrying about time (O), I felt excited, confident, and energised (F), because my needs for self-expression, contribution, and autonomy were met (N).","cat":"OFNR - Self"},
+{"date":"2/12/2026","text":"In morning when Payal was sharing how she is different then me and she does not mind reacting at places where people need to be shown boundaries. I could say that I am not her and I will react differently.","cat":"Be Yourself"},
+{"date":"2/16/2026","text":"How my world changed? World changes when you get some external event or an internal event. I am working towards integrating NVC in my life to connect with others for better.\n\nToday what happened:\nDuring meeting with Rima and product team I could see Rima's feeling of others priority.\nDuring call with Amrita I could name her feeling of effectiveness.\nDuring call with Rishab and Hiral in evening I could understand feeling of Hiral on highlights.\n\nComing back I could see my father worried when kaka's news came.\nI could also see my daughter feeling longing and disappointed.\n\nThis language helped me see a world through a different lens.","cat":"Story"},
+{"date":"2/17/2026","text":"Many times in life we try hard to get something or we feel something will be very difficult but when we start working in that direction it automatically happens or it goes out very smooth.\n\nNachiket when shared with Nidhi that I am shutting down, she was chill as opposed to whatever he might have thought.\n\nPayal was thinking that what kind of job I can get in this market and she has an interview lined up with her desired salary.\n\nI was thinking to work on AI tool some day and work on JTBD someday but this week they both got aligned.","cat":"Story"},
+{"date":"2/17/2026","text":"Today lot of instances:\n1. During sprint meeting with developers. I went with idea of using AI and then sold into their idea. Seeing polars I thought that I am not good at CTO stuff as well.\n2. When Rishab told me post interview that why were you clarifying so much and then took me to say let us not find lead right now and I got convinced. I questioned how will he perceive me as a leader.\n3. When I could not nudge Siddharth not to do performance marketing. I started giving in power.","cat":"Low Confidence"},
+{"date":"2/17/2026","text":"What is happening since Abhishek has said that undivided attention.\nI have started withdrawing from places:\na. Business plan (No next steps defined)\nb. Current form (prep for Kashyap or Vinesh)\nc. Reducing to make comments in others work\n\nInstead I have started focusing more on video and trying to streamline it.\n\nWhat I need to understand:\na. Things are progressing and working fine. Capture is doing great except few cases.\nb. I need to keep improving my level up role.\nc. I first need to get capture handle and for time being give it more priority.\nd. I do not need to undermine myself or my work at all.","cat":"Thoughts"},
+{"date":"2/18/2026","text":"Kaka was calling me to complete car loan and he sent a series of messages.\nPayal read that he was saying that I was doing Jugaad — she did not like it and she got upset.\nI told kaka that I am not doing jugaad — I have not used a single money that he has sent.\nI took some things in heat of the moment.","cat":"Event"},
+{"date":"2/19/2026","text":"19th Feb — Our 19th Anniversary.\nThere was no celebratory mood from Payal as she was constantly thinking about what someone said.\nI came back from office after first half had a good sleep in afternoon.\nNo fixed plans in evening — just went out on a ride and she had a sandwich.\n\nDad told me:\na. I will not use car.\nb. Hardik will not be able to buy, how can he run house in 65k.\nc. Sorry that I am telling you this.\nd. You have spent so much on house it is hard to believe that you are in difficult situation from finance.\ne. I am happy — I have seen worse days than this in my life so I am happy with whatever I have.","cat":"Event"},
+{"date":"2/20/2026","text":"We both had to go to school. Aanshi had exams, so I dropped her. We both left early from home. Were together on lunch. Things came normal.","cat":"Event"},
+{"date":"2/24/2026","text":"When I came back from USA loved staying there and some things that I liked there and decided to follow it here. Yesterday one such thing happened when I was at Zudio. How I could have started yelling or pressing the counter person to do something but I waited patiently like a US citizen and waited for my turn to come.","cat":"Story"},
+{"date":"2/24/2026","text":"Shaurya yesterday told me that I get frustrated when the opposite player does celebration on winning a point in badminton and I then get angry.\n\n\"When the other player celebrates, I imagine it feels irritating or distracting. I want you to enjoy the game and stay strong. What do you think could help you stay focused even when that happens?\"\n\nNow you're not dismissing emotion. You're coaching emotional regulation.","cat":"OFNR - Other"},
+{"date":"2/24/2026","text":"I became parent twice yesterday:\n- Do not get angry while playing it is not good — focus on your game.\n- Do not eat more than 2 sweets a day — I want you to become a great athlete.\n\nNo NVC — more of moral guidance, control, correction.","cat":"Story"},
+{"date":"2/25/2026","text":"The only way to solve and win through problem is to work towards it.\nToday I felt so good when I started making consistent effort of owning and sharing capture work. Another subtle thing is when you start overcoming your fears.\n- Subsidy discussion\n- Maharshi KT\n- Production plan discussion\n- Claude Code trial and understanding Python Code\n- Do whatever it takes\n\nAgain all of what I may have read is coming to life.","cat":"Story"},
+{"date":"2/25/2026","text":"Today morning I took good care of her and she could feel it when I ensured that she gets time for call and she can do exercise. Even she could feel that care. We also talked about trip on the walk. I am able to sense her feelings and needs.","cat":"Payal Letter"},
+{"date":"2/25/2026","text":"When Aanshi started teasing me by keeping lights on and laughing at it.\n\"When you turned the lights on to tease me, I felt hurt and a little dismissed, because this value of not wasting resources is something I genuinely care about and it matters to me that you understand that, even if you don't share it the same way.\"","cat":"OFNR - Self"},
+{"date":"2/26/2026","text":"All performances are not same.\nWe keep talking about recognition at CricHeroes and when we see from onset we feel that this performance someone must buy and then when we talk to users we learn that they do not value individual match performances, normal tournament match performances — they value critical tournament match performances.","cat":"Story"},
+{"date":"2/26/2026","text":"How older memories or learnings make it so fulfilling.\n\nToday I was taking KT from Maharshi and it reminded me of few things from my college like plan and elevation, isometric and orthogonal projection, strength of materials.\n\nHow science and building physical objects is different than building softwares.","cat":"Story"},
+{"date":"2/26/2026","text":"AI as a powerful tool.\n\nHow humans have always got powerful tools in history and they have helped mankind.\nAI looks like most powerful tool till date and even powerful than human.\nLet us see how humans use it and benefit and make larger good.\n\nHow software as a line came and how software will eat itself and commoditize. How other engineerings will become more valuable.","cat":"Story"},
+{"date":"2/24/2026","text":"I used to think that turning off all the unnecessary lights and kept telling that to everyone. This is what I inherited from my parents.\nNow that day it struck me that kids do not think that way — there is also another way to see lights giving beauty to home.\nSo now I do not make fuss of it — sometimes I keep them on and not tell everyone to keep it off.","cat":"Thoughts"},
+{"date":"3/6/2026","text":"Your OFNR:\nObservation: The TV time extended beyond 20 minutes and I started feeling unproductive.\nFeeling: Restless. Anxious. Perhaps a quiet guilt about time passing without purpose.\nNeed: To use time meaningfully. To not feel like things are slipping out of order.\nRequest to yourself: Can I notice this restlessness without acting on it immediately? Can I sit with the discomfort for a little while in service of something equally valuable — which is just being with my children?","cat":"OFNR - Self"},
+{"date":"3/6/2026","text":"Aanshi:\nObservation: Papa was watching TV with us and then suddenly shifted to checking on my habits mid-enjoyment.\nFeeling: Dismissed. Disrupted. Perhaps a little sad — because she was enjoying him being there, not just the TV.\nNeed: To feel that this time with Papa is safe and uninterrupted. That she is enough reason for him to stay present.\nRequest she couldn't articulate but was underneath her reaction: \"Just be here with me. Nothing else right now.\"","cat":"OFNR - Other"},
+];
+
+// ── STATE ──────────────────────────────────────────────────────────
+const STORAGE_KEY = 'hfl_entries_v2';
+let currentView = 'all';
+
+function loadEntries() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return stored;
+  } catch(e) { return []; }
+}
+
+function saveEntries(entries) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+function getAllEntries() {
+  const stored = loadEntries();
+  // Merge: CSV entries first (as base), then stored on top
+  // Use a map to deduplicate by date+text snippet
+  const merged = [...CSV_ENTRIES.map((e,i) => ({
+    id: 'csv_' + i,
+    date: parseDate(e.date),
+    dateStr: e.date,
+    text: e.text,
+    cat: normalizeCategory(e.cat),
+    theme: guessTheme(e.text, e.cat),
+    source: 'csv'
+  })), ...stored];
+  return merged;
+}
+
+function parseDate(str) {
+  if (!str) return new Date(0);
+  // Handle M/D/YYYY and YYYY-MM-DD
+  if (str.includes('-')) return new Date(str + 'T00:00:00');
+  const parts = str.split('/');
+  if (parts.length === 3) {
+    return new Date(parseInt(parts[2]), parseInt(parts[0])-1, parseInt(parts[1]));
+  }
+  return new Date(str);
+}
+
+// Heuristic theme guesser for CSV entries (no theme tagged)
+function guessTheme(text, cat) {
+  const t = (text + ' ' + cat).toLowerCase();
+  if (/payal letter|loving her/.test(cat.toLowerCase())) return 't1';
+  if (/people pleasing|be yourself|authentic|hiding|pleasing/.test(t)) return 't0';
+  if (/payal|anniversary|wife|husband|marriage|montu|aanshi|shaurya|kids|family/.test(t) && !/work|office|meeting/.test(t)) return 't1';
+  if (/ofnr.*other|eye contact|listen|connect|conversation|nvc/.test(t)) return 't2';
+  if (/ofnr.*self|vedic|karma|bias|long.term|fear|nvc.*self/.test(t)) return 't3';
+  if (/meeting|work|office|leadership|delegate|team|captain|product|capture|cricho/.test(t)) return 't4';
+  if (/smile|present|observe|body|energy|meditation|mindful|breath/.test(t)) return 't5';
+  if (/seva|charity|give|donate|serve|level up|community/.test(t)) return 't6';
+  return '';
+}
+
+// ── VIEWS ──────────────────────────────────────────────────────────
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + view.replace('cat-','cat-'));
+  if (navEl) navEl.classList.add('active');
+
+  if (view === 'weekly') {
+    document.getElementById('journal-view').style.display = 'none';
+    document.getElementById('weekly-view').style.display = 'flex';
+    document.getElementById('nav-weekly').classList.add('active');
+  } else {
+    document.getElementById('journal-view').style.display = 'flex';
+    document.getElementById('weekly-view').style.display = 'none';
+    updateTopbar();
+    renderEntries();
+  }
+}
+
+function updateTopbar() {
+  const titles = {
+    'all': 'All entries',
+    't0': 'Be myself', 't1': 'Love better', 't2': 'Connect better',
+    't3': 'Think better', 't4': 'Work better', 't5': 'Be present', 't6': 'Serve & give',
+  };
+  const catTitles = {
+    'cat-OFNR - Self': 'OFNR – Self', 'cat-OFNR - Other': 'OFNR – Other',
+    'cat-People Pleasing': 'People pleasing', 'cat-Story': 'Story',
+    'cat-Payal Letter': 'Payal / loving her', 'cat-Thoughts': 'Thoughts', 'cat-Event': 'Event',
+  };
+  const title = titles[currentView] || catTitles[currentView] || currentView;
+  document.getElementById('topbar-title').textContent = title;
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────
+function renderEntries() {
+  const all = getAllEntries();
+  const search = document.getElementById('search-box').value.toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+
+  let filtered = all.filter(e => {
+    if (search && !e.text.toLowerCase().includes(search) && !(e.cat||'').toLowerCase().includes(search)) return false;
+    if (currentView === 'all') return true;
+    if (currentView.startsWith('t')) return e.theme === currentView;
+    if (currentView.startsWith('cat-')) {
+      const catKey = currentView.slice(4);
+      // Group Payal Letter variants
+      if (catKey === 'Payal Letter') return normalizeCategory(e.cat) === 'Payal Letter';
+      if (catKey === 'Low Confidence') return normalizeCategory(e.cat) === 'Low Confidence';
+      return normalizeCategory(e.cat) === catKey;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    const da = parseDate(a.dateStr || a.date), db = parseDate(b.dateStr || b.date);
+    return sort === 'newest' ? db - da : da - db;
+  });
+
+  document.getElementById('topbar-count').textContent = filtered.length + ' entries';
+
+  // Render
+  const list = document.getElementById('entries-list');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-state-title">Nothing here yet</div><div>Write your first entry above.</div></div>';
+    return;
+  }
+
+  // Group by month
+  const groups = {};
+  filtered.forEach(e => {
+    const d = parseDate(e.dateStr || e.date);
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const label = d.toLocaleDateString('en-IN', {month:'long', year:'numeric'});
+    if (!groups[key]) groups[key] = { label, entries: [] };
+    groups[key].entries.push(e);
+  });
+
+  let html = '';
+  Object.keys(groups).sort((a,b) => sort === 'newest' ? b.localeCompare(a) : a.localeCompare(b)).forEach(k => {
+    html += `<div class="entries-group-label">${groups[k].label} &middot; ${groups[k].entries.length}</div>`;
+    groups[k].entries.forEach(e => { html += renderCard(e); });
+  });
+  list.innerHTML = html;
+
+  updateCounts(all);
+}
+
+function renderCard(e) {
+  const d = parseDate(e.dateStr || e.date);
+  const dateLabel = d.toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+  const cat = normalizeCategory(e.cat);
+  const catColor = CAT_COLORS[e.cat] || CAT_COLORS[cat] || '#909090';
+  const theme = THEMES[e.theme];
+  const isLong = e.text.length > 320;
+  const id = 'e_' + (e.id || Math.random().toString(36).slice(2));
+
+  const themePill = theme ? `<span class="tag theme-pill" style="background:${theme.bg};color:${theme.color}">${theme.label}</span>` : '';
+  const catPill = `<span class="tag tag-cat" style="border-left:2px solid ${catColor}">${cat}</span>`;
+  const deleteBtn = e.source !== 'csv' ? `<button class="entry-delete-btn" onclick="deleteEntry('${e.id}')" title="Delete">×</button>` : '';
+
+  return `<div class="entry-card" id="${id}">
+    ${deleteBtn}
+    <div class="entry-meta">
+      <span class="entry-date">${dateLabel}</span>
+      ${catPill}
+      ${themePill}
+    </div>
+    <div class="entry-text ${isLong ? 'truncated' : ''}" id="txt_${id}">${escHtml(e.text)}</div>
+    ${isLong ? `<button class="entry-expand" onclick="toggleExpand('txt_${id}', this)">Read more</button>` : ''}
+  </div>`;
+}
+
+function toggleExpand(id, btn) {
+  const el = document.getElementById(id);
+  if (el.classList.contains('truncated')) {
+    el.classList.remove('truncated');
+    btn.textContent = 'Show less';
+  } else {
+    el.classList.add('truncated');
+    btn.textContent = 'Read more';
+  }
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function updateCounts(all) {
+  document.getElementById('cnt-all').textContent = all.length;
+  ['t0','t1','t2','t3','t4','t5','t6'].forEach(t => {
+    const el = document.getElementById('cnt-' + t);
+    if (el) el.textContent = all.filter(e => e.theme === t).length;
+  });
+  const cats = ['OFNR - Self','OFNR - Other','People Pleasing','Story','Payal Letter','Thoughts','Event'];
+  cats.forEach(c => {
+    const el = document.getElementById('cnt-cat-' + c);
+    if (el) el.textContent = all.filter(e => normalizeCategory(e.cat) === c).length;
+  });
+}
+
+// ── SAVE ENTRY ──────────────────────────────────────────────────────
+function saveEntry() {
+  const text = document.getElementById('entry-text').value.trim();
+  if (!text) return;
+  const dateVal = document.getElementById('entry-date').value;
+  const theme = document.getElementById('entry-theme').value;
+  const cat = document.getElementById('entry-cat').value;
+
+  const entry = {
+    id: 'u_' + Date.now(),
+    date: new Date(dateVal + 'T00:00:00'),
+    dateStr: new Date(dateVal + 'T00:00:00').toLocaleDateString('en-IN'),
+    text,
+    cat: normalizeCategory(cat),
+    theme,
+    source: 'user'
+  };
+
+  const stored = loadEntries();
+  stored.unshift(entry);
+  saveEntries(stored);
+
+  document.getElementById('entry-text').value = '';
+  const flash = document.getElementById('saved-flash');
+  flash.style.display = 'inline';
+  setTimeout(() => flash.style.display = 'none', 2000);
+
+  renderEntries();
+  updateStreakBar();
+}
+
+function deleteEntry(id) {
+  if (!id || !id.startsWith('u_')) return;
+  const stored = loadEntries().filter(e => e.id !== id);
+  saveEntries(stored);
+  renderEntries();
+}
+
+// ── STREAK BAR ──────────────────────────────────────────────────────
+function updateStreakBar() {
+  const all = getAllEntries();
+  const today = new Date();
+  const days = ['S','M','T','W','T','F','S'];
+  // Get this week Mon–Fri
+  const dow = today.getDay(); // 0=Sun
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1));
+
+  let html = '<span class="streak-label">This week</span>';
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const dStr = d.toDateString();
+    const hasEntry = all.some(e => parseDate(e.dateStr || e.date).toDateString() === dStr);
+    const isToday = d.toDateString() === today.toDateString();
+    const cls = hasEntry ? 'done' : (isToday ? 'today' : '');
+    html += `<div class="streak-day ${cls}" title="${d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'})}">${days[d.getDay()]}</div>`;
+  }
+
+  const total = all.length;
+  html += `<span class="total-count">${total} total entries</span>`;
+  document.getElementById('streak-bar').innerHTML = html;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
+updateStreakBar();
+renderEntries();
+</script>
+</body>
+</html>
